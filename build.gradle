@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example.Hibernet'
+group = 'org.example.jdbcFlyway'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.22.3'
+
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
+    implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.4.4.Final'
+    implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
+
+
+}
+
+test {
+    useJUnitPlatform()
+}
