@@ -3,14 +3,12 @@ package org.example.Hibernet;
 import org.example.Hibernet.Entities.Client;
 import org.example.Hibernet.Entities.Planet;
 import org.example.Hibernet.Entities.Ticket;
-import org.example.Hibernet.Services.ClientCrudService;
-import org.example.Hibernet.Services.PlanetCrudService;
-import org.example.Hibernet.Services.PropReader;
-import org.example.Hibernet.Services.StartConfiguration;
+import org.example.Hibernet.Services.*;
 import org.flywaydb.core.Flyway;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Main {
@@ -26,6 +24,11 @@ public class Main {
         // Create
         newPlanet.setId("NEP34");
         newPlanet.setName("Neptun");
+
+//        List<Ticket> tickets = pcs.getTicketsFromPlanet("ERTH1");
+//        for (Ticket ticket :tickets) {
+//            System.out.println(ticket);
+//        }
         //System.out.println(pcs.createPlanet(newPlanet));
 
         //Update
@@ -50,30 +53,54 @@ public class Main {
 
 
         ClientCrudService ccs = new ClientCrudService();
-        Client newClient = new Client();
+        //Client newClient = new Client();
 
         //Create
-       newClient.setName("Zmiy Gorinich");
+       //newClient.setName("Zmiy Gorinich");
 
-        long idNewClient = ccs.createClient(newClient);
-         System.out.println(idNewClient);
-        System.out.println(newClient);
+//        long idNewClient = ccs.createClient(newClient);
+//         System.out.println(idNewClient);
+//        System.out.println(newClient);
 
         //Update
-        newClient.setName("Meduse Gargona");
-        System.out.println(ccs.updateClient(idNewClient, newClient));
+//        newClient.setName("Meduse Gargona");
+//        System.out.println(ccs.updateClient(idNewClient, newClient));
 
         //Delete by id
          //System.out.println(ccs.deleteClientById(46L));
 
         //Read
-        System.out.println(ccs.getClientById(47L));
+        //System.out.println(ccs.getClientById(47L));
 
         //ReadAll
-        List<Client> clients = ccs.getAllClients();
-        for (Client client :clients) {
-            System.out.println(client);
-        }
+//        List<Client> clients = ccs.getAllClients();
+//        for (Client client :clients) {
+//            System.out.println(client);
+//        }
+        TicketCrudService tcs = new TicketCrudService();
+        Ticket ticket = new Ticket();
+        ticket.setClientId(ccs.getClientById(33L));
+        ticket.setTimeOfCreating(LocalDateTime.of(2024,03,16,16,45));
+        ticket.setFromPlanetID(pcs.getPlanetById("ERTH1"));
+        ticket.setToPlanetId(pcs.getPlanetById("VENR23"));
+
+        //createTicket
+        //long idTisket = tcs.createTicket(ticket);
+
+        //read ticket/tickets
+        System.out.println(tcs.getTicketById(30L));
+//        List<Ticket> tickets = tcs.getAllTickets();
+//        for (Ticket ticket1:tickets) {
+//            System.out.println(ticket1);
+//        }
+
+        //updateTicket
+        //System.out.println(tcs.updateTicket(22L,ticket));
+
+        //deleteTicket
+        //System.out.println(tcs.deleteTicketById(32L));
+
+
 
     }
 

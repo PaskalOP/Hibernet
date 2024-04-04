@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 @Data
@@ -16,4 +17,8 @@ public class Client {
     @Column()
     @Size(min = 3, max = 200)
     String name;
+
+    @OneToMany (mappedBy = "clientId", cascade = CascadeType.ALL)
+    private Set<Ticket> tickets;
+
 }

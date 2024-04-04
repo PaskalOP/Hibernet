@@ -2,9 +2,13 @@ package org.example.Hibernet.Services;
 
 import org.example.Hibernet.DAO.PlanetDAO;
 import org.example.Hibernet.Entities.Planet;
+import org.example.Hibernet.Entities.Ticket;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class PlanetCrudService implements PlanetDAO {
     @Override
@@ -44,11 +48,11 @@ public class PlanetCrudService implements PlanetDAO {
     }
     @Override
     public Planet  getPlanetById(String  planetId){
-        Planet planet;
+
         try (Session session = StartConfiguration.getInstance().getSessionFactory().openSession()){
-            planet = session.get(Planet.class, planetId);
+            return session.get(Planet.class, planetId);
         }
-        return planet;
+
     }
     @Override
     public List<Planet> getAllPlanets(){
@@ -81,5 +85,13 @@ public class PlanetCrudService implements PlanetDAO {
             session.remove(planet);
             transaction.commit();
         }
+    }
+
+    public List<Ticket> getTicketsFromPlanet(String planetId){
+        String hql = "SELECT p.ticketsFromPlanet FROM Planet p WHERE p.id = :planetId";
+        try(Session session = StartConfiguration.getInstance().getSessionFactory().openSession()){
+            return session.createQuery(hql,Ticket.class).setParameter("planetId", planetId).getResultList();
+        }
+
     }
 }

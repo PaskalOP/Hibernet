@@ -1,27 +1,24 @@
 package org.example.Hibernet.Services;
 
-import org.example.Hibernet.DAO.ClientDAO;
 import org.example.Hibernet.Entities.Client;
-import org.example.Hibernet.Entities.Planet;
+import org.example.Hibernet.Entities.Ticket;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientCrudService implements ClientDAO {
-
-
-    @Override
-    public long createClient(Client client) {
+public class TicketCrudService {
+   public long createTicket(Ticket ticket ){
         Long id =-1L;
         try (Session session = StartConfiguration.getInstance().getSessionFactory().openSession()){
             Transaction transaction = session.beginTransaction();
             try{
-                client.setId(null);
-                session.persist(client);
+                ticket.setId(null);
+                session.persist(ticket);
                 transaction.commit();
-                id = (Long)session.getIdentifier(client);
+                id = (Long)session.getIdentifier(ticket);
 
             } catch (Exception ex){
                 ex.printStackTrace();
@@ -30,15 +27,13 @@ public class ClientCrudService implements ClientDAO {
         }
         return id;
     }
-
-    @Override
-    public boolean updateClient(Long clientId, Client client) {
+    public boolean updateTicket (Long  ticketId, Ticket ticket){
         boolean result = false;
         try (Session session = StartConfiguration.getInstance().getSessionFactory().openSession()){
             Transaction transaction = session.beginTransaction();
             try{
-                client.setId(clientId);
-                session.merge(client);
+                ticket.setId(ticketId);
+                session.merge(ticket);
                 transaction.commit();
                 result =true;
 
@@ -50,31 +45,35 @@ public class ClientCrudService implements ClientDAO {
 
         return result;
     }
-
-    @Override
-    public Client getClientById(Long clientId) {
+    public Ticket  getTicketById(Long  ticketId){
 
         try (Session session = StartConfiguration.getInstance().getSessionFactory().openSession()){
-            return  session.get(Client.class, clientId);
+           Ticket ticket = session.get(Ticket.class, ticketId);
+           Hibernate.initialize(ticket.getClientId().getTickets());
+            return ticket;
+
         }
 
     }
-
-    @Override
-    public List<Client> getAllClients() {
+    public List<Ticket> getAllTickets(){
         try(Session session = StartConfiguration.getInstance().getSessionFactory().openSession()){
-            return session.createQuery("from Client",Client.class).list();
+            List<Ticket> tickets = session.createQuery("from Ticket",Ticket.class).list();
+
+            for (Ticket ticket : tickets) {
+                Hibernate.initialize(ticket.getFromPlanetID());
+                Hibernate.initialize(ticket.getToPlanetId());
+                Hibernate.initialize((ticket.getClientId().getTickets()));
+            }
+            return tickets;
         }
     }
-
-    @Override
-    public boolean deleteClientById(Long clientId) {
+    public boolean deleteTicketById(Long ticketId){
         boolean result = false;
         try(Session session = StartConfiguration.getInstance().getSessionFactory().openSession()){
             Transaction transaction = session.beginTransaction();
             try{
-                Client needClient= session.get(Client.class, clientId);
-                session.remove(needClient);
+                Ticket needTicket = session.get(Ticket.class, ticketId);
+                session.remove(needTicket);
                 transaction.commit();
                 result=true;
             }catch (Exception ex){
@@ -83,7 +82,5 @@ public class ClientCrudService implements ClientDAO {
             }
             return result;
         }
-
     }
-
 }

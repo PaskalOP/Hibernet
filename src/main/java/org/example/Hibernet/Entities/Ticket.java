@@ -18,20 +18,25 @@ public class Ticket {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column
-    Long id;
+    private Long id;
 
     @Column (name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
-    LocalDateTime timeOfCreating;
+    private LocalDateTime timeOfCreating;
 
-    @Column(name="client_id")
-    Long clientId;
 
-    @Column(name = "from_planet_id")
-    String fromPlanetID;
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client clientId;
 
-    @Column(name = "to_planet_id")
-    String toPlanetId;
+    @ManyToOne
+    @JoinColumn(name = "from_planet_id", nullable = false)
+    private Planet fromPlanetID;
+
+    @ManyToOne
+    @JoinColumn(name = "to_planet_id", nullable = false)
+    private Planet toPlanetId;
+
 
 
 }
